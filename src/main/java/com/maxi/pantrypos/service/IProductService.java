@@ -2,7 +2,7 @@ package com.maxi.pantrypos.service;
 
 import com.maxi.pantrypos.model.Product;
 
-import java.time.LocalDate;
+
 import java.util.List;
 
 public interface IProductService {
@@ -28,7 +28,7 @@ public interface IProductService {
     //get least sold product
     public Product getLeastSoldProduct();
     //update price product
-    public void updatePrice(Long id, Double price);
+    public Product updatePrice(Long id, Double price);
     //days to expiration product
     public Long getDaysToExpiration(Long id);
     //update stock product

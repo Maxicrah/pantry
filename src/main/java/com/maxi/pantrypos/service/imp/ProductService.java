@@ -88,7 +88,9 @@ public class ProductService implements IProductService {
 
     @Override
     public Product getBestSellingProduct() {
-        return null;
+
+        return this.productDAO.findBestSellingProduct().orElseThrow(()
+                -> new RuntimeException("no product found"));
     }
 
     @Override
@@ -97,10 +99,13 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void updatePrice(Long id, Double price) {
+    public Product updatePrice(Long id, Double price) {
         Product product = this.getProduct(id);
+        if(product == null){
+            throw new RuntimeException("product is null");
+        }
         product.setPrice(price);
-        this.productDAO.save(product);
+        return this.productDAO.save(product);
     }
 
     @Override
