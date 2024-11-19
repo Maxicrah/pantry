@@ -122,4 +122,10 @@ public class ProductService implements IProductService {
         product.setStock(stock);
         this.productDAO.save(product);
     }
+
+    @Override
+    public List<Product> findProductsByIds(List<Long> productIds) {
+        return productDAO.findAllById(productIds);
+    }
+
 }

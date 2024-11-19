@@ -34,4 +34,6 @@ public interface IProductService {
     //update stock product
     public void updateStock(Long id, Long stock);
 
+    public List<Product> findProductsByIds(List<Long> productIds);
+
 }

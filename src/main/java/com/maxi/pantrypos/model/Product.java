@@ -1,13 +1,12 @@
 package com.maxi.pantrypos.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
 @Builder
@@ -26,8 +25,9 @@ public class Product {
     private Double cost;
     private Boolean isOnSale;
     private Double unitOfMeasure;
+    @ManyToMany(mappedBy = "products")
+    private List<Offer> offers;
     //private Category category;
-    //private Offer offer;
    // private Supplier supplier;
 }
 

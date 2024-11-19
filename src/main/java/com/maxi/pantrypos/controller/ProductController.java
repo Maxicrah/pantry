@@ -2,10 +2,12 @@ package com.maxi.pantrypos.controller;
 
 import com.maxi.pantrypos.model.Product;
 import com.maxi.pantrypos.service.IProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
@@ -19,16 +21,26 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createProduct(@RequestBody Product product){
-        this.productService.save(product);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Map<String, Object>> createProduct(@RequestBody Product product){
+        Product savedProduct = this.productService.save(product);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                "message", "Product created successfully",
+                "product", savedProduct
+        ));
     }
 
     @GetMapping("/{idProduct}")
-    public ResponseEntity<?> getProduct(@PathVariable(name= "idProduct") Long idProduct){
+    public ResponseEntity<Map<String, Object>> getProduct(@PathVariable(name= "idProduct") Long idProduct){
       Product product =  this.productService.getProduct(idProduct);
-        return ResponseEntity.ok(product);
-    }
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Product not found"));
+        }
+        return ResponseEntity.ok(Map.of(
+                "product", product,
+                "message", "Product retrieved successfully"
+        ));    }
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProducts(){
@@ -43,9 +55,11 @@ public class ProductController {
     }
 
     @GetMapping("/find/{name}")
-    public ResponseEntity<?> findProductByName(@PathVariable(name = "name") String name){
+    public ResponseEntity<Map<String, Object>> findProductByName(@PathVariable(name = "name") String name){
         Product product = this.productService.findProductByName(name);
-        return ResponseEntity.ok(product);
+        return ResponseEntity.ok(Map.of("product", product,
+                "message", "Product retrieved successfully"
+        ));
     }
 
     @PutMapping("/update-price/{idProduct}")
