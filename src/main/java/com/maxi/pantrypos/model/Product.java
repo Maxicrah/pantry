@@ -27,7 +27,9 @@ public class Product {
     private Double unitOfMeasure;
     @ManyToMany(mappedBy = "products")
     private List<Offer> offers;
-    //private Category category;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
    // private Supplier supplier;
 }
 
