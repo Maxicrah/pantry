@@ -30,6 +30,7 @@ public class Product {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
-   // private Supplier supplier;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products")
+    private List<Supplier> suppliers;
 }
 
