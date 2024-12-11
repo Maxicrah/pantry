@@ -22,5 +22,8 @@ public class Sale {
     private String status;
     @ManyToMany
     private List<Product> productsSold;
+    @ManyToOne
+    @JoinColumn(name="id_customer")
+    private Customer customer;
 
 }
