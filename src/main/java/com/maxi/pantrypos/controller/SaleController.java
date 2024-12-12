@@ -15,9 +15,10 @@ public class SaleController {
     @Autowired
     private ISaleService saleService;
 
-    @PostMapping("/create")
-    public ResponseEntity<Sale> processSale(@RequestBody Sale sale){
-        this.saleService.processSale(sale);
+    @PostMapping("/create/{idCustomer}")
+    public ResponseEntity<Sale> processSale(@RequestBody Sale sale,
+                                            @PathVariable(name="idCustomer") Long idCustomer) {
+        this.saleService.processSale(sale, idCustomer);
         return ResponseEntity.ok(sale);
     }
 

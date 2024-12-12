@@ -1,8 +1,10 @@
 package com.maxi.pantrypos.service.imp;
 
 import com.maxi.pantrypos.dao.ISaleDAO;
+import com.maxi.pantrypos.model.Customer;
 import com.maxi.pantrypos.model.Product;
 import com.maxi.pantrypos.model.Sale;
+import com.maxi.pantrypos.service.ICustomerService;
 import com.maxi.pantrypos.service.IProductService;
 import com.maxi.pantrypos.service.ISaleService;
 import org.springframework.stereotype.Service;
@@ -14,14 +16,22 @@ import java.util.List;
 @Service
 public class SaleService implements ISaleService {
     private final ISaleDAO saleDAO;
+    private final ICustomerService customerService;
    // private final IProductService productService;
-    public SaleService(ISaleDAO saleDAO) {
+    public SaleService(ISaleDAO saleDAO, ICustomerService customerService) {
         //this.productService = productService;
         this.saleDAO = saleDAO;
+        this.customerService = customerService;
     }
 
     @Override
-    public Sale processSale(Sale sale) {
+    public Sale processSale(Sale sale, Long idCustomer) {
+
+        Customer customer = this.customerService.findCustomerById(idCustomer);
+
+        if(customer == null) {
+            throw new RuntimeException("customer not found");
+        }
         if (sale.getProductsSold() == null || sale.getProductsSold().isEmpty()) {
             throw new RuntimeException("not products sold");
         }
@@ -29,6 +39,7 @@ public class SaleService implements ISaleService {
         for(Product product : sale.getProductsSold()) {
             totalAmount += product.getPrice();
         }
+        sale.setCustomer(customer);
         sale.setTotalAmount(totalAmount);
         sale.setSaleDate(LocalDateTime.now());
         sale.setStatus("completed");
