@@ -1,5 +1,6 @@
 package com.maxi.pantrypos.service;
 
+import com.maxi.pantrypos.dto.ProductDTO;
 import com.maxi.pantrypos.model.Product;
 
 
@@ -8,7 +9,7 @@ import java.util.List;
 public interface IProductService {
 
     //create product
-    public Product save(Product product);
+    public Product save(ProductDTO product);
     //delete product
     public void deleteProduct(Long id);
     //update product

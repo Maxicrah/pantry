@@ -1,6 +1,7 @@
 package com.maxi.pantrypos.service.imp;
 
 import com.maxi.pantrypos.dao.IProductDAO;
+import com.maxi.pantrypos.dto.ProductDTO;
 import com.maxi.pantrypos.model.Product;
 import com.maxi.pantrypos.service.IProductService;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,25 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product save(Product product) {
+    public Product save(ProductDTO product) {
         if(product == null) {
             throw new RuntimeException("product is null");
         }
-        return this.productDAO.save(product);
+        Product prod = new Product();
+        prod.setName(product.getName());
+        prod.setDescription(product.getDescription());
+        prod.setPrice(product.getPrice());
+        prod.setExpirationDate(product.getExpirationDate());
+        prod.setEntryDate(product.getEntryDate());
+        prod.setStock(product.getStock());
+        prod.setImage(product.getImage());
+        prod.setCost(product.getCost());
+        prod.setIsOnSale(product.getIsOnSale());
+        prod.setUnitOfMeasure(product.getUnitOfMeasure());
+        prod.setCategory(null);
+        prod.setSuppliers(null);
+        prod.setOffers(null);
+        return prod;
     }
 
     @Override

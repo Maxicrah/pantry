@@ -1,5 +1,6 @@
 package com.maxi.pantrypos.controller;
 
+import com.maxi.pantrypos.dto.ProductDTO;
 import com.maxi.pantrypos.model.Product;
 import com.maxi.pantrypos.service.IProductService;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>> createProduct(@RequestBody Product product){
+    public ResponseEntity<Map<String, Object>> createProduct(@RequestBody ProductDTO product){
         Product savedProduct = this.productService.save(product);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
