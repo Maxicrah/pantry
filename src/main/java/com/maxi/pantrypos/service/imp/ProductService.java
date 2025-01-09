@@ -4,6 +4,7 @@ import com.maxi.pantrypos.dao.IProductDAO;
 import com.maxi.pantrypos.dto.ProductDTO;
 import com.maxi.pantrypos.model.Product;
 import com.maxi.pantrypos.service.IProductService;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,15 +22,19 @@ public class ProductService implements IProductService {
     @Override
     public Product save(ProductDTO product) {
         if(product == null) {
-            throw new RuntimeException("product is null");
+            throw new IllegalArgumentException("product cannot be null");
         }
         Product prod = new Product();
         prod.setName(product.getName());
         prod.setDescription(product.getDescription());
         prod.setPrice(product.getPrice());
+        if(!this.validateExpirationDate(product.getExpirationDate())) {
+           throw new IllegalArgumentException("error expiration date");
+        }
         prod.setExpirationDate(product.getExpirationDate());
-        prod.setEntryDate(product.getEntryDate());
+        prod.setEntryDate(LocalDate.now());
         prod.setStock(product.getStock());
+        prod.setCodProduct(product.getCodProduct());
         prod.setImage(product.getImage());
         prod.setCost(product.getCost());
         prod.setIsOnSale(product.getIsOnSale());
@@ -37,14 +42,14 @@ public class ProductService implements IProductService {
         prod.setCategory(null);
         prod.setSuppliers(null);
         prod.setOffers(null);
-        return prod;
+        return this.productDAO.save(prod);
     }
 
     @Override
     public void deleteProduct(Long id) {
         Product product = this.getProduct(id);
         if(product == null) {
-            throw new RuntimeException("product is null");
+            throw new IllegalArgumentException("product is null");
         }
         this.productDAO.delete(product);
     }
@@ -69,10 +74,15 @@ public class ProductService implements IProductService {
 
     @Override
     public Product getProduct(Long id) {
-        if(id > 999L){
-            throw new RuntimeException("id greater than 999");
+
+        Product product = this.productDAO.findById(id).orElse(null);
+        if(product == null) {
+            throw new IllegalArgumentException("product not found");
         }
-        return this.productDAO.findById(id).orElse(null);
+        if(product.getIdProduct() > 999){
+            throw new IllegalArgumentException("product id too large");
+        }
+        return product;
     }
 
     @Override
@@ -141,6 +151,18 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> findProductsByIds(List<Long> productIds) {
         return productDAO.findAllById(productIds);
+    }
+
+
+    private Double calculateSuggestedPrice(Double price){
+       Double suggestedPrice;
+       suggestedPrice = price * 1.3;
+       return suggestedPrice;
+    }
+
+    private boolean validateExpirationDate(LocalDate expirationDate) {
+        LocalDate today = LocalDate.now();
+        return expirationDate.isAfter(today);
     }
 
 }

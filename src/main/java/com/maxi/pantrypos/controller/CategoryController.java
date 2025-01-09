@@ -1,8 +1,10 @@
 package com.maxi.pantrypos.controller;
 
+import com.maxi.pantrypos.dto.CategoryDTO;
 import com.maxi.pantrypos.model.Category;
 import com.maxi.pantrypos.model.Product;
 import com.maxi.pantrypos.service.ICategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +21,8 @@ public class CategoryController {
     private ICategoryService categoryService;
 
 
-
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>>  createCategory( @RequestBody Category category){
+    public ResponseEntity<Map<String, Object>>  createCategory( @RequestBody @Valid CategoryDTO category){
         Category categorySaved = this.categoryService.saveCategory(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "message", "created",

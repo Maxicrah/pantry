@@ -28,6 +28,9 @@ public class OfferService implements IOfferService {
         Offer offer = new Offer();
         //traemos a los productos que deseamos añadir ala oferta
         List<Product> products = this.productService.findProductsByIds(productsIds);
+        if(products == null){
+            throw new IllegalArgumentException("products not found");
+        }
         Double totalPriceOffer= 0.0;
         //le asignamos oferta y le cambiamos el offer a true
         offer.setProducts(products);
@@ -37,6 +40,9 @@ public class OfferService implements IOfferService {
         }
         if(discount > 75){
             throw new RuntimeException("discount must not be greater than 75");
+        }
+        if(discount <= 0){
+            throw new IllegalArgumentException("product must not be less than 0");
         }
         Double discountedPrice = totalPriceOffer * (1 - discount / 100);
         offer.setDiscount(discount);

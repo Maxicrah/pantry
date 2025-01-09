@@ -1,6 +1,7 @@
 package com.maxi.pantrypos.service.imp;
 
 import com.maxi.pantrypos.dao.ICategoryDAO;
+import com.maxi.pantrypos.dto.CategoryDTO;
 import com.maxi.pantrypos.model.Category;
 import com.maxi.pantrypos.model.Product;
 import com.maxi.pantrypos.service.ICategoryService;
@@ -86,8 +87,10 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public Category saveCategory(Category category) {
-        return this.categoryDAO.save(category);
+    public Category saveCategory(CategoryDTO category) {
+        Category category1 = new Category();
+        category1.setCategoryName(category.getCategoryName());
+        return this.categoryDAO.save(category1);
     }
 
     @Override

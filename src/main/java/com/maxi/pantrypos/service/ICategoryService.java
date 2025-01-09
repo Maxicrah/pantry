@@ -1,5 +1,6 @@
 package com.maxi.pantrypos.service;
 
+import com.maxi.pantrypos.dto.CategoryDTO;
 import com.maxi.pantrypos.model.Category;
 import com.maxi.pantrypos.model.Product;
 
@@ -11,7 +12,7 @@ public interface ICategoryService {
     public Product addProductToCategory(Long id, String productName);
     public Product removeProductAtCategory(Long id, String productName);
     public List<Category> getAllCategories();
-    public Category saveCategory(Category category);
+    public Category saveCategory(CategoryDTO category);
     public Category findCategoryById(Long id);
 
 }
