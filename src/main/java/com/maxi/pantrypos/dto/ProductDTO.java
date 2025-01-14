@@ -17,6 +17,8 @@ public class ProductDTO {
     @NotBlank(message = "code product is required")
     @Size(min = 6, message = "code product must be more than 6 characters")
     private String codProduct;
+    @NotBlank(message = "description is required")
+    @Size(min = 10, message = "description must be more than 10 characters")
     private String description;
     @NotNull
     private LocalDate expirationDate;

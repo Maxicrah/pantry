@@ -2,9 +2,10 @@ package com.maxi.pantrypos.service.imp;
 
 import com.maxi.pantrypos.dao.IProductDAO;
 import com.maxi.pantrypos.dto.ProductDTO;
+import com.maxi.pantrypos.exception.product.ProductEntryDateException;
+import com.maxi.pantrypos.exception.product.ProductNotFoundException;
 import com.maxi.pantrypos.model.Product;
 import com.maxi.pantrypos.service.IProductService;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,15 +22,15 @@ public class ProductService implements IProductService {
 
     @Override
     public Product save(ProductDTO product) {
-        if(product == null) {
-            throw new IllegalArgumentException("product cannot be null");
+        if(product.getUnitOfMeasure() == null || product.getIsOnSale() == null) {
+            throw new ProductNotFoundException("product is incomplete", "verify content unit of measure or is on sale");
         }
         Product prod = new Product();
         prod.setName(product.getName());
         prod.setDescription(product.getDescription());
         prod.setPrice(product.getPrice());
         if(!this.validateExpirationDate(product.getExpirationDate())) {
-           throw new IllegalArgumentException("error expiration date");
+            throw new ProductEntryDateException("expiration date invalid", "verify expiration date");
         }
         prod.setExpirationDate(product.getExpirationDate());
         prod.setEntryDate(LocalDate.now());
@@ -49,7 +50,7 @@ public class ProductService implements IProductService {
     public void deleteProduct(Long id) {
         Product product = this.getProduct(id);
         if(product == null) {
-            throw new IllegalArgumentException("product is null");
+            throw new ProductNotFoundException("product not found", "product no exist in database");
         }
         this.productDAO.delete(product);
     }
@@ -58,7 +59,7 @@ public class ProductService implements IProductService {
     public Product updateProduct(Long id, Product product) {
         Product newProduct =this.getProduct(id);
         if(newProduct == null) {
-            throw new RuntimeException("product is null");
+            throw new ProductNotFoundException("product not found", "product no exist in database");
         }
         newProduct.setName(product.getName());
         newProduct.setDescription(product.getDescription());
@@ -77,10 +78,10 @@ public class ProductService implements IProductService {
 
         Product product = this.productDAO.findById(id).orElse(null);
         if(product == null) {
-            throw new IllegalArgumentException("product not found");
+            throw new ProductNotFoundException("product not found", "product no exist in database");
         }
         if(product.getIdProduct() > 999){
-            throw new IllegalArgumentException("product id too large");
+            throw new ProductNotFoundException("product not found", "product id too large");
         }
         return product;
     }
