@@ -1,6 +1,9 @@
 package com.maxi.pantrypos.exception;
 
 import com.maxi.pantrypos.dto.ErrorDTO;
+import com.maxi.pantrypos.exception.offer.InvalidOfferException;
+import com.maxi.pantrypos.exception.offer.OfferDiscountException;
+import com.maxi.pantrypos.exception.offer.OfferNotFoundException;
 import com.maxi.pantrypos.exception.product.ProductEntryDateException;
 import com.maxi.pantrypos.exception.product.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -54,6 +57,37 @@ public class GlobalExceptionHandler {
                 detail(ex.getDetail()).
                 timestamp(LocalDate.now()).build();
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(OfferDiscountException.class)
+    public ResponseEntity<ErrorDTO> offerDiscountExceptionHandler(OfferDiscountException ex) {
+        ErrorDTO error = ErrorDTO.builder().
+                message(ex.getMessage()).
+                code("404").
+                detail(ex.getDetail()).
+                timestamp(LocalDate.now()).build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidOfferException.class)
+    public ResponseEntity<ErrorDTO> invalidOfferExceptionHandler(InvalidOfferException ex) {
+        ErrorDTO error = ErrorDTO.builder().
+                message(ex.getMessage()).
+                code("404").
+                detail(ex.getDetail()).
+                timestamp(LocalDate.now()).build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OfferNotFoundException.class)
+    public ResponseEntity<ErrorDTO> offerNotFoundExceptionHandler(OfferNotFoundException ex) {
+        ErrorDTO error = ErrorDTO.builder().
+                message(ex.getMessage()).
+                code("404").
+                detail("offer no exists in database").
+                timestamp(LocalDate.now()).build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
 }

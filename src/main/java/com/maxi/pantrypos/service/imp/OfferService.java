@@ -2,6 +2,10 @@ package com.maxi.pantrypos.service.imp;
 
 import com.maxi.pantrypos.dao.IOfferDAO;
 
+import com.maxi.pantrypos.exception.offer.InvalidOfferException;
+import com.maxi.pantrypos.exception.offer.OfferDiscountException;
+import com.maxi.pantrypos.exception.offer.OfferNotFoundException;
+import com.maxi.pantrypos.exception.product.ProductNotFoundException;
 import com.maxi.pantrypos.model.Offer;
 import com.maxi.pantrypos.model.Product;
 import com.maxi.pantrypos.service.IOfferService;
@@ -29,7 +33,7 @@ public class OfferService implements IOfferService {
         //traemos a los productos que deseamos añadir ala oferta
         List<Product> products = this.productService.findProductsByIds(productsIds);
         if(products == null){
-            throw new IllegalArgumentException("products not found");
+            throw new ProductNotFoundException("products not found", "products list empty");
         }
         Double totalPriceOffer= 0.0;
         //le asignamos oferta y le cambiamos el offer a true
@@ -39,10 +43,10 @@ public class OfferService implements IOfferService {
             totalPriceOffer += product.getPrice();
         }
         if(discount > 75){
-            throw new RuntimeException("discount must not be greater than 75");
+            throw new OfferDiscountException("discount is greater than 75", "discount invalid");
         }
         if(discount <= 0){
-            throw new IllegalArgumentException("product must not be less than 0");
+            throw new OfferDiscountException("discount must be more than 0", "discount invalid");
         }
         Double discountedPrice = totalPriceOffer * (1 - discount / 100);
         offer.setDiscount(discount);
@@ -60,10 +64,10 @@ public class OfferService implements IOfferService {
         Product product = this.productService.findProductByName(productName);
 
         if (product == null) {
-            throw new RuntimeException("product not found");
+            throw new ProductNotFoundException("product not found", "products list empty");
         }
         if(this.productService.validateOffer(product.getIdProduct())){
-                throw new RuntimeException("offer already exists");
+                throw new InvalidOfferException("offer already exists", "verify offer");
         }
 
         product.setIsOnSale(true);
@@ -82,7 +86,7 @@ public class OfferService implements IOfferService {
 
             offer.setOfferPrice(discountedPrice);
         } else {
-            throw new RuntimeException("minimum purchase quantity should be greater than 0");
+            throw new InvalidOfferException("offer must be more than 0", "offer invalid");
         }
 
         return this.offerDAO.save(offer);
@@ -91,7 +95,7 @@ public class OfferService implements IOfferService {
     @Override
     public void deleteOffer(Long id) {
         if(this.findOfferById(id) == null) {
-            throw new RuntimeException("no offer found with id: " + id);
+            throw new OfferNotFoundException("offer no exits with id " + id);
         }
         this.offerDAO.deleteById(id);
     }
@@ -103,7 +107,8 @@ public class OfferService implements IOfferService {
 
     @Override
     public Offer findOfferById(Long id) {
-        return this.offerDAO.findById(id).orElse(null);
+        return this.offerDAO.findById(id).orElseThrow(() ->
+                new OfferNotFoundException("offer no exits with id " + id));
     }
 
     @Override

@@ -96,7 +96,8 @@ public class ProductService implements IProductService {
 
         Product product = this.productDAO.findByName(name);
         if(product == null) {
-            throw new RuntimeException("product with name " + name + " not found");
+            throw new ProductNotFoundException("product not found", "product no exist in database" +
+                                                "verify name product");
         }
         return product;
     }
@@ -128,7 +129,7 @@ public class ProductService implements IProductService {
     public Product updatePrice(Long id, Double price) {
         Product product = this.getProduct(id);
         if(product == null){
-            throw new RuntimeException("product is null");
+            throw new ProductNotFoundException("product not found", "product no exist in database");
         }
         product.setPrice(price);
         return this.productDAO.save(product);
