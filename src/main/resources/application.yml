@@ -9,5 +9,10 @@ spring:
     url: jdbc:mysql://localhost:3306/db_pantry?serverTimezone=UTC
     username: root
     password:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+      max-request-size: 12MB
 server:
   port: 8085

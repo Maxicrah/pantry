@@ -4,13 +4,16 @@ import com.maxi.pantrypos.dto.ErrorDTO;
 import com.maxi.pantrypos.exception.offer.InvalidOfferException;
 import com.maxi.pantrypos.exception.offer.OfferDiscountException;
 import com.maxi.pantrypos.exception.offer.OfferNotFoundException;
+import com.maxi.pantrypos.exception.product.ProductCodeException;
 import com.maxi.pantrypos.exception.product.ProductEntryDateException;
 import com.maxi.pantrypos.exception.product.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -42,10 +45,41 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProductEntryDateException.class)
     public ResponseEntity<ErrorDTO> verifyProductExceptionHandler(ProductEntryDateException ex) {
         ErrorDTO error = ErrorDTO.builder().
+                message(ex.getMessage()).
+                code("404").
+                detail(ex.getDetail()).
+                timestamp(LocalDate.now()).build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ProductCodeException.class})
+    public ResponseEntity<ErrorDTO> verifyProductCodeExceptionHandler(ProductCodeException ex) {
+        ErrorDTO error = ErrorDTO.builder().
+                message(ex.getMessage()).
+                code("409").
+                detail(ex.getDetail()).
+                timestamp(LocalDate.now()).build();
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorDTO> maxSizeExceptionHandler(MaxUploadSizeExceededException ex) {
+        ErrorDTO error = ErrorDTO.builder().
                                     message(ex.getMessage()).
-                                    code("404").
-                                    detail(ex.getDetail()).
+                                    code(ex.getStatusCode().toString()).
+                                    detail(ex.getDetailMessageCode()).
                                     timestamp(LocalDate.now()).build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<ErrorDTO> fileNotFoundExceptionHandler(FileNotFoundException ex) {
+        ErrorDTO error = ErrorDTO.builder().
+                message(ex.getMessage()).
+                code("404").
+                detail("file not found").
+                timestamp(LocalDate.now()).build();
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 

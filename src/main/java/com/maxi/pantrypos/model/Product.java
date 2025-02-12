@@ -3,13 +3,15 @@ package com.maxi.pantrypos.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
-@Builder
+@Builder(toBuilder = true)
 @Entity
 public class Product {
     @Id
@@ -21,7 +23,10 @@ public class Product {
     private LocalDate expirationDate;
     private LocalDate entryDate;
     private Double price;
-    private String image;
+    @Lob
+    private byte[] imageData;
+    private String imageName;
+    private String imageType;
     private Long stock;
     private Double cost;
     private Boolean isOnSale;

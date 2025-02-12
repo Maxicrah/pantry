@@ -5,9 +5,12 @@ import com.maxi.pantrypos.model.Product;
 import com.maxi.pantrypos.service.IProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +26,12 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody ProductDTO product){
-        Product savedProduct = this.productService.save(product);
+    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestPart("product") ProductDTO product,
+                                                             @RequestPart("image") MultipartFile image) throws IOException {
+        Product savedProduct = this.productService.save(product, image);
+        System.out.println(savedProduct);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
-                "message", "Product created successfully",
+                "message", "product created successfully",
                 "product", savedProduct
         ));
     }
@@ -56,6 +61,18 @@ public class ProductController {
         Product product = this.productService.findProductByName(name);
         return ResponseEntity.ok(Map.of("product", product,
                 "message", "Product retrieved successfully"
+        ));
+    }
+
+    @PutMapping("/update/{idProduct}")
+    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable(name = "idProduct") Long idProduct,
+                                                            @Valid @RequestPart ProductDTO product,
+                                                             @RequestPart MultipartFile image) throws IOException {
+
+        Product prod = this.productService.updateProduct(idProduct, product, image);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Map.of(
+                "message", "Product updated successfully",
+                "product: ", prod
         ));
     }
 

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,7 +27,6 @@ public class ProductDTO {
     @NotNull(message = "price is required")
     @Min(value = 20,message = "price must be minor 20")
     private Double price;
-    private String image;
     @NotNull(message = "stock is required")
     @Min(value = 1,message = "min stock 1")
     @Max(value = 100, message = "stock no more than 100")
