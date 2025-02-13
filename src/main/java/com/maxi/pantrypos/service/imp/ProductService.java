@@ -66,20 +66,7 @@ public class ProductService implements IProductService {
         if(this.validateExistsCodeProduct(product.getCodProduct())){
             throw new ProductCodeException("code product already exist", "change code product");
         }
-        Product updateProduct = originalProduct.toBuilder()
-                .name(product.getName() != null ? product.getName() : originalProduct.getName())
-                .codProduct(product.getCodProduct() != null ? product.getCodProduct() : originalProduct.getCodProduct())
-                .description(product.getDescription() != null ? product.getDescription() : originalProduct.getDescription())
-                .price(product.getPrice() != null ? product.getPrice() : originalProduct.getPrice())
-                .cost(product.getCost() != null ? product.getCost() : originalProduct.getCost())
-                .entryDate(product.getEntryDate() != null ? product.getEntryDate() : originalProduct.getEntryDate())
-                .expirationDate(product.getExpirationDate() != null ? product.getExpirationDate() : originalProduct.getExpirationDate())
-                .isOnSale(product.getIsOnSale() != null ? product.getIsOnSale() : originalProduct.getIsOnSale())
-                .unitOfMeasure(product.getUnitOfMeasure() != null ? product.getUnitOfMeasure() : originalProduct.getUnitOfMeasure())
-                .imageData(image != null ? image.getBytes() : originalProduct.getImageData())
-                .imageName(image != null ? image.getOriginalFilename() : originalProduct.getImageName())
-                .imageType(image != null ? image.getContentType() : originalProduct.getImageType())
-                .build();
+        Product updateProduct = this.updateProductData(originalProduct, product, image);
 
         return this.productDAO.save(updateProduct);
     }
@@ -107,7 +94,12 @@ public class ProductService implements IProductService {
 
         Product product = this.productDAO.findByName(name);
         if(product == null) {
-            throw new ProductNotFoundException("product not found", "product no exist in database" +
+            throw new ProductNotFoundException("product not found", "product no exist in database");
+        }
+        String productName = product.getName().toLowerCase();
+        String inputName = name.toLowerCase();
+        if(productName.isEmpty() || !productName.equals(inputName)) {
+            throw new ProductNotFoundException("product not found", "product no exist in database " +
                                                 "verify name product");
         }
         return product;
@@ -198,6 +190,27 @@ public class ProductService implements IProductService {
                 .unitOfMeasure(productDTO.getUnitOfMeasure())
                 .build();
     }
+
+    private Product updateProductData(Product originalProduct,
+                                      ProductDTO productDTO,
+                                      MultipartFile image) throws IOException {
+        return originalProduct.toBuilder()
+                .name(productDTO.getName() != null ? productDTO.getName() : originalProduct.getName())
+                .codProduct(productDTO.getCodProduct() != null ? productDTO.getCodProduct() : originalProduct.getCodProduct())
+                .description(productDTO.getDescription() != null ? productDTO.getDescription() : originalProduct.getDescription())
+                .price(productDTO.getPrice() != null ? productDTO.getPrice() : originalProduct.getPrice())
+                .cost(productDTO.getCost() != null ? productDTO.getCost() : originalProduct.getCost())
+                .stock(productDTO.getStock() != null ? productDTO.getStock() : originalProduct.getStock())
+                .entryDate(productDTO.getEntryDate() != null ? productDTO.getEntryDate() : originalProduct.getEntryDate())
+                .expirationDate(productDTO.getExpirationDate() != null ? productDTO.getExpirationDate() : originalProduct.getExpirationDate())
+                .isOnSale(productDTO.getIsOnSale() != null ? productDTO.getIsOnSale() : originalProduct.getIsOnSale())
+                .unitOfMeasure(productDTO.getUnitOfMeasure() != null ? productDTO.getUnitOfMeasure() : originalProduct.getUnitOfMeasure())
+                .imageData(image != null ? image.getBytes() : originalProduct.getImageData())
+                .imageName(image != null ? image.getOriginalFilename() : originalProduct.getImageName())
+                .imageType(image != null ? image.getContentType() : originalProduct.getImageType())
+                .build();
+    }
+
     private boolean validateExpirationDate(LocalDate expirationDate) {
         LocalDate today = LocalDate.now();
         return expirationDate.isAfter(today);

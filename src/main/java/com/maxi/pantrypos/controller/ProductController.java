@@ -77,7 +77,7 @@ public class ProductController {
     }
 
     @PutMapping("/update-price/{idProduct}")
-    public ResponseEntity<?> updateProduct(@PathVariable(name = "idProduct") Long idProduct,
+    public ResponseEntity<?> updatePriceProduct(@PathVariable(name = "idProduct") Long idProduct,
                                            @RequestParam Double price){
        Product product = this.productService.updatePrice(idProduct, price);
         return ResponseEntity.ok(product);
