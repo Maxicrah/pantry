@@ -7,6 +7,7 @@ import com.maxi.pantrypos.exception.product.ProductEntryDateException;
 import com.maxi.pantrypos.exception.product.ProductNotFoundException;
 import com.maxi.pantrypos.model.File;
 import com.maxi.pantrypos.model.Product;
+import com.maxi.pantrypos.response.ResponseProduct;
 import com.maxi.pantrypos.service.IFileService;
 import com.maxi.pantrypos.service.IProductService;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProductService implements IProductService {
+public class ProductService implements IProductService{
 
     private final IProductDAO productDAO;
     public ProductService(IProductDAO productDAO) {
@@ -153,6 +154,8 @@ public class ProductService implements IProductService {
         this.productDAO.save(product);
     }
 
+
+
     @Override
     public List<Product> findProductsByIds(List<Long> productIds) {
         return productDAO.findAllById(productIds);
@@ -210,6 +213,7 @@ public class ProductService implements IProductService {
                 .imageType(image != null ? image.getContentType() : originalProduct.getImageType())
                 .build();
     }
+
 
     private boolean validateExpirationDate(LocalDate expirationDate) {
         LocalDate today = LocalDate.now();

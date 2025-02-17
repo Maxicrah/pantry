@@ -9,8 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface ICustomerDAO extends JpaRepository<Customer, Long> {
-    boolean existsByEmail(String email);
-    boolean existsByDni(String dni);
-    @Query("SELECT c FROM Customer c WHERE c.name = :name")
-    Optional<Customer> findByName(String name);
+
 }

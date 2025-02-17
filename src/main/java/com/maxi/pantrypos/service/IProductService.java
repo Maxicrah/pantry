@@ -2,6 +2,7 @@ package com.maxi.pantrypos.service;
 
 import com.maxi.pantrypos.dto.ProductDTO;
 import com.maxi.pantrypos.model.Product;
+import com.maxi.pantrypos.response.ResponseProduct;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -38,7 +39,6 @@ public interface IProductService {
     public Long getDaysToExpiration(Long id);
     //update stock product
     public void updateStock(Long id, Long stock);
-
     public List<Product> findProductsByIds(List<Long> productIds);
 
 }

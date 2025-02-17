@@ -12,32 +12,32 @@ import java.util.List;
 @RequestMapping("sale")
 public class SaleController {
 
-    @Autowired
-    private ISaleService saleService;
-
-    @PostMapping("/create/{idCustomer}")
-    public ResponseEntity<Sale> processSale(@RequestBody Sale sale,
-                                            @PathVariable(name="idCustomer") Long idCustomer) {
-        this.saleService.processSale(sale, idCustomer);
-        return ResponseEntity.ok(sale);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteSale(@PathVariable(name= "id") Long id){
-        this.saleService.deleteSaleById(id);
-        return ResponseEntity.ok("Sale deleted");
-    }
-
-    @GetMapping("find/{id}")
-    public ResponseEntity<Sale> findSale(@PathVariable(name = "id") Long id){
-        Sale sale = this.saleService.getSaleById(id);
-        return ResponseEntity.ok(sale);
-    }
-
-    @GetMapping("find/all")
-    public ResponseEntity<List<Sale>> findAllSale(){
-        this.saleService.getAllSales();
-        return ResponseEntity.ok(this.saleService.getAllSales());
-    }
+//    @Autowired
+//    private ISaleService saleService;
+//
+//    @PostMapping("/create/{idCustomer}")
+//    public ResponseEntity<Sale> processSale(@RequestBody Sale sale,
+//                                            @PathVariable(name="idCustomer") Long idCustomer) {
+//        this.saleService.processSale(sale, idCustomer);
+//        return ResponseEntity.ok(sale);
+//    }
+//
+//    @DeleteMapping("/delete/{id}")
+//    public ResponseEntity<String> deleteSale(@PathVariable(name= "id") Long id){
+//        this.saleService.deleteSaleById(id);
+//        return ResponseEntity.ok("Sale deleted");
+//    }
+//
+//    @GetMapping("find/{id}")
+//    public ResponseEntity<Sale> findSale(@PathVariable(name = "id") Long id){
+//        Sale sale = this.saleService.getSaleById(id);
+//        return ResponseEntity.ok(sale);
+//    }
+//
+//    @GetMapping("find/all")
+//    public ResponseEntity<List<Sale>> findAllSale(){
+//        this.saleService.getAllSales();
+//        return ResponseEntity.ok(this.saleService.getAllSales());
+//    }
 
 }
